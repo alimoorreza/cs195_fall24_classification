@@ -52,51 +52,8 @@ print("Size of train set:", N_train)
 print("Size of test set:",  N_test)
 
 
-# Step 3: Use the AlexNet from above
-#--------------------------------------------------------------------------------------------------
 
-# You can give any name to your new network, e.g., AlexNet.
-# You should load the pretrained AlexNet model from torchvision.models.
-# This model was trained on over a million real-world images from ImageNet.
-# The idea is to bootstrap our CNN network weights with pretrained weights.
-# Our model will converge to a solution faster.
-# This training process is called 'fine-tuning.'
-
-
-class AlexNet(nn.Module):
-    def __init__(self, num_classes, pretrained=True):
-        super(AlexNet, self).__init__()
-        net = models.alexnet(pretrained=True)
-
-        # retained earlier convolutional and pooling layers from AlexNet
-        self.features   = net.features
-        self.avgpool    = net.avgpool
-
-        # added new fully connected layers
-        self.classifier = nn.Sequential(
-            nn.Linear(256 * 6 * 6, 4096),
-            nn.ReLU(True),
-            nn.Dropout(),
-            nn.Linear(4096, 512),
-            nn.ReLU(True),
-            nn.Dropout(),
-            nn.Linear(512, num_classes)
-        )
-
-
-    def forward(self, x):
-        #print("shape of input: ", x.shape)
-        x = self.features(x)
-        #print("output shape (self.features): ", x.shape)
-        x = self.avgpool(x)
-        #print("output shape (self.avgpool): ", x.shape)
-        x = torch.flatten(x, 1)
-        x = self.classifier(x)
-        #print("output shape (self.classifier): ", x.shape)
-        return x
-
-
-# Step 4: Your training and testing functions
+# Step 3: Your training and testing functions
 #--------------------------------------------------------------------------------------
 
 def train_loop(dataloader, model, loss_fn, optimizer):
@@ -197,13 +154,25 @@ def test_loop(dataloader, model, loss_fn):
     print('Confusion matrix for test set:\n', confusion_matrix(test_y_all.cpu().data, test_pred_all.cpu().data))
     return test_loss, 100*correct, confusion_matrix(test_y_all.cpu().data, test_pred_all.cpu().data)
 
-# Step 5: prepare the DataLoader and select your optimizer and set the hyper-parameters for learning the model from DataLoader
-#------------------------------------------------------------------------------------------------------------------------------
+
+# Step 4: Use the AlexNet from above
+#--------------------------------------------------------------------------------------------------
+
+# You can give any name to your new network, e.g., AlexNet.
+# You should load the pretrained AlexNet model from torchvision.models.
+# This model was trained on over a million real-world images from ImageNet.
+# The idea is to bootstrap our CNN network weights with pretrained weights.
+# Our model will converge to a solution faster.
+# This training process is called 'fine-tuning.'
 
 cnn_model = AlexNet(number_of_classes)
 cnn_model.to(device)
 print(cnn_model)
 
+
+
+# Step 5: prepare the DataLoader and select your optimizer and set the hyper-parameters for learning the model from DataLoader
+#------------------------------------------------------------------------------------------------------------------------------
 
 learning_rate     = 1e-4
 batch_size_val    = 32
