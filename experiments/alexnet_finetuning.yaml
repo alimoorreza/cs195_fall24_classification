@@ -1,0 +1,37 @@
+CUDNN:
+  BENCHMARK: true
+  DETERMINISTIC: false
+  ENABLED: true
+GPUS: (0,)
+OUTPUT_DIR: '/l/vision/jolteon_ssd/mdreza/drake_teaching/classification/output/'
+WORKERS: 2
+
+MODEL:
+    NAME: 'alexnet'
+
+DATASET:
+  ROOT: '/l/vision/jolteon_ssd/mdreza/drake_teaching/classification/datasets/bcdp_v1/'
+  TEST_SET: 'test'
+  TRAIN_SET: 'train'
+  NUM_CLASSES: 4
+  
+TRAIN:
+  IMAGE_SIZE:
+  - 227
+  - 227
+  BATCH_SIZE: 32
+  SHUFFLE: true
+  BEGIN_EPOCH: 0
+  END_EPOCH: 10
+  RESUME: true
+  OPTIMIZER: 'adam'
+  BASE_LR: 0.0001
+  WEIGHT_DECAY: 0.0001
+  MOMENTUM: 0.9  
+  NESTEROV: false
+
+TEST:
+  IMAGE_SIZE:
+  - 227
+  - 227
+  BATCH_SIZE: 32
