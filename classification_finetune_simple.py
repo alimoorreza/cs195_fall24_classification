@@ -33,7 +33,7 @@ print(f"Using {device} device")
 transform = transforms.Compose([
     transforms.Resize((227, 227)),
     transforms.ToTensor(),
-    transforms.Normalize((.229, .224, .225), (.485, .456, .406)) # ImageNet: mean (R, G, B) and standard deviation (R, G, B)
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]) # ImageNet: mean (R, G, B) and standard deviation (R, G, B)
 ])
 
 
